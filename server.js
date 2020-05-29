@@ -165,16 +165,15 @@ function insertDept() {
           }
         );
       });
-  }
+  };
 
   function deptSearch() {
           connection.query("SELECT * FROM department;", function(err, res) {
             if (err) throw err;
             console.log("\n");
             console.table(res);
-
+            chooseAct();
           });
-          chooseAct();
         };
 
   function roleSearch() {
@@ -182,8 +181,8 @@ function insertDept() {
           if (err) throw err;
           console.log("\n");
           console.table(res);
+          chooseAct();
         });
-        chooseAct();
   };
 
   function employeeSearch() {
@@ -191,8 +190,8 @@ function insertDept() {
       if (err) throw err;
       console.log("\n");
       console.table(res);
+      chooseAct();
     });
-    chooseAct();
 };
 
 
