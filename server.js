@@ -194,5 +194,56 @@ function insertDept() {
     });
 };
 
+function updateRole() {
+  connection.query("SELECT * FROM employee", function(err, results) {
+    if (err) throw err;
+    inquirer
+    .prompt([
+      {
+        name: "choice",
+        type: "rawlist",
+        choices: function() {
+          var choiceArray = [];
+          for (var i = 0; i < results.length; i++) {
+            choiceArray.push(results[i].employee_id);
+          }
+          return choiceArray;
+        },
+        message: "What is the employee id of the employee whose role you would like to change?"
+      },
+      {
+        name: "newRole",
+        type: "input",
+        message: "What is the new role of the employee?"
+      }
+    ])
+    .then(function(answer) {
+      var chosenRole;
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].employee_id === answer.choice) {
+          chosenRole = results[i];
+          connection.query(
+            "UPDATE employee SET ? WHERE ?",
+            [
+              {
+                newRole: answer.chosenRole
+              },
+              {
+                id: chosenRole.id
+              }
+            ],
+            function(error) {
+              if (error) throw err;
+              console.log("Role changed successfully!");
+              chooseAct()
+            }
+          );
+        };
+      };
+
+    })
+  })
+}
+
 
     
