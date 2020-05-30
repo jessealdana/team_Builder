@@ -19,7 +19,7 @@ CREATE TABLE employee (
     employee_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    employeeRole_id INT UNSIGNED NOT NULL,
+    title VARCHAR(30) NOT NULL,
     dept_id INT UNSIGNED NOT NULL,
     manager_id INT NULL
 );
@@ -36,10 +36,10 @@ VALUES ("Owner", 150, "1");
 INSERT INTO employeeRole (title, salary, dept_id)
 VALUES ("Minion", 100, "2");
 
-INSERT INTO employee (first_name, last_name, dept_id, manager_id)
-VALUES ("Rich", "One", "1","1");
+INSERT INTO employee (first_name, last_name, title, dept_id, manager_id)
+VALUES ("Rich", "One", "Owner", "1","1");
 
-INSERT INTO employee (first_name, last_name, dept_id, manager_id)
-VALUES ("Les", "So", "2", "1");
+INSERT INTO employee (first_name, last_name, title, dept_id, manager_id)
+VALUES ("Les", "So", "Minion", "2", "1");
 
 

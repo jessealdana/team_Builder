@@ -34,7 +34,8 @@ function chooseAct() {
         "View department",
         "View role",
         "View employee",
-        "Update employee role"
+        "Update employee role",
+        "Delete employee info"
       ]
     })
     .then(function(answer) {
@@ -66,6 +67,10 @@ function chooseAct() {
 
       case "Update employee role":
         updateRole();
+        break;
+      
+      case "Delete employee info":
+        deleteEmployee();
         break;
       }
     });
@@ -145,9 +150,9 @@ function insertDept() {
           message: "What is the last name of the new employee?"
         },
         {
-        name: "employeeRole_id",
+        name: "title",
         type: "input",
-        message: "What is the role id of the new employee?"
+        message: "What is the title of the new employee?"
         },
         {
           name: "dept_id",
@@ -167,7 +172,7 @@ function insertDept() {
           {
             first_name: answer.first_name,
             last_name: answer.last_name,
-            employeeRole_id: answer.employeeRole_id,
+            title: answer.title,
             dept_id: answer.dept_id,
             manager_id: answer.manager_id
           },
@@ -225,27 +230,75 @@ function updateRole() {
         message: "What is the employee id of the employee whose role you would like to change?"
       },
       {
-        name: "role",
+        name: "title",
         type: "input",
-        message: "What is the new role of the employee?"
+        message: "What is the new title of the employee?"
       }
     ])
-    .then(function(answer) {
-        connection.query(
-          "UPDATE employee SET ? WHERE ?",
-            [
-              {
-                employeeRole_id: answer.employeeRole_id
-              }
-            ],
-            function(error) {
-              if (error) throw err;
+    .then(function(response) {
+      updateEmployeeRole(response);
+    });
+  });
+};
+  
+function updateEmployeeRole(answer) {
+      connection.query("UPDATE employee SET ? WHERE ?",
+          [
+            {
+              title: answer.title
+            },
+            {
+              employee_id: answer.choice
+            }
+          ],
+            function(err, res) {
+              if (err) throw err;
               console.log(res.affectedRow + "Role changed successfully!");
               chooseAct()
             }
           );
-        });
+        };
+
+function deleteEmployee() {
+      connection.query("SELECT * FROM employee", function(err, results) {
+          if (err) throw err;
+            inquirer
+            .prompt([
+              {
+                name: "choice",
+                type: "rawlist",
+                choices: function() {
+                  var choiceArray = [];
+                  for (var i = 0; i < results.length; i++) {
+                    choiceArray.push(results[i].employee_id);
+                  }
+                  return choiceArray;
+                },
+                message: "What is the employee id that will be removed?"
+              }
+            ])
+            .then(function(response) {
+              deleteEmployeeAll(response);
+            });
+          });
+        };
+
+        function deleteEmployeeAll(answer) {
+          console.log("Deleting employee");
+          connection.query(
+            "DELETE FROM employee WHERE ?",
+            {
+              employee_id: answer.choice
+            },
+            function(err, res) {
+              if (err) throw err;
+              console.log(res.affectedRows + " employee deleted!\n");
+              chooseAct();
+            }
+          );
+        };
+        
 
 
-    });
-};
+
+
