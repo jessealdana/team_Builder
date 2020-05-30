@@ -142,13 +142,24 @@ function insertDept() {
         {
           name: "last_name",
           type: "input",
-          message: "What is the last name of the new employee"
+          message: "What is the last name of the new employee?"
+        },
+        {
+        name: "employeeRole_id",
+        type: "input",
+        message: "What is the role id of the new employee?"
         },
         {
           name: "dept_id",
           type: "input",
           message: "What is the department id of the new employee?"
+        },
+        {
+          name: "manager_id",
+          type: "input",
+          message: "What is the id of the manager of the new employee?"
         }
+
       ])
       .then(function(answer) {
         connection.query(
@@ -156,7 +167,9 @@ function insertDept() {
           {
             first_name: answer.first_name,
             last_name: answer.last_name,
-            dept_id: answer.dept_id
+            employeeRole_id: answer.employeeRole_id,
+            dept_id: answer.dept_id,
+            manager_id: answer.manager_id
           },
           function(err) {
             if (err) throw err;
@@ -212,38 +225,27 @@ function updateRole() {
         message: "What is the employee id of the employee whose role you would like to change?"
       },
       {
-        name: "newRole",
+        name: "role",
         type: "input",
         message: "What is the new role of the employee?"
       }
     ])
     .then(function(answer) {
-      var chosenRole;
-      for (var i = 0; i < results.length; i++) {
-        if (results[i].employee_id === answer.choice) {
-          chosenRole = results[i];
-          connection.query(
-            "UPDATE employee SET ? WHERE ?",
+        connection.query(
+          "UPDATE employee SET ? WHERE ?",
             [
               {
-                newRole: answer.chosenRole
-              },
-              {
-                id: chosenRole.id
+                employeeRole_id: answer.employeeRole_id
               }
             ],
             function(error) {
               if (error) throw err;
-              console.log("Role changed successfully!");
+              console.log(res.affectedRow + "Role changed successfully!");
               chooseAct()
             }
           );
-        };
-      };
-
-    })
-  })
-}
+        });
 
 
-    
+    });
+};
